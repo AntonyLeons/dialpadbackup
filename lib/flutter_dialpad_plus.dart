@@ -7,6 +7,7 @@ import 'package:flutter_dtmf/flutter_dtmf.dart';
 
 class DialPad extends StatefulWidget {
   final ValueSetter<String> useNumber;
+  final Color numberColor;
   final Color keyPadColor;
   final Color keyPadTextColor;
   final Color dialButtonColor;
@@ -21,6 +22,7 @@ class DialPad extends StatefulWidget {
       @required this.dialButtonColor,
       this.useNumber,
       this.outputMask,
+      this.numberColor,
       this.keyPadColor,
       this.keyPadTextColor,
       this.dialButtonIconColor,
@@ -113,7 +115,11 @@ class _DialPadState extends State<DialPad> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: TextFormField(
               readOnly: true,
-              style: TextStyle(color: Colors.white, fontSize: sizeFactor / 2),
+              style: TextStyle(
+                  color: widget.numberColor != null
+                      ? widget.numberColor
+                      : Colors.white,
+                  fontSize: sizeFactor / 2),
               textAlign: TextAlign.center,
               decoration: InputDecoration(border: InputBorder.none),
               controller: textEditingController,
