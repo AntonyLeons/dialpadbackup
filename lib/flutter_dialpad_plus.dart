@@ -8,6 +8,7 @@ import 'package:flutter_dtmf/flutter_dtmf.dart';
 class DialPad extends StatefulWidget {
   final ValueSetter<String> useNumber;
   final Color numberColor;
+  final Color animationColor;
   final Color keyPadColor;
   final Color keyPadTextColor;
   final Color dialButtonColor;
@@ -23,6 +24,7 @@ class DialPad extends StatefulWidget {
       this.useNumber,
       this.outputMask,
       this.numberColor,
+      this.animationColor,
       this.keyPadColor,
       this.keyPadTextColor,
       this.dialButtonIconColor,
@@ -88,6 +90,7 @@ class _DialPadState extends State<DialPad> {
         title: mainTitle[i],
         subtitle: subTitle[i],
         color: widget.keyPadColor,
+        animateColor: widget.animationColor,
         textColor: widget.keyPadTextColor,
         onTap: _setText,
       ));
@@ -141,6 +144,7 @@ class _DialPadState extends State<DialPad> {
                     iconColor: widget.dialButtonIconColor,
                     icon: widget.buttonIcon,
                     color: widget.dialButtonColor,
+                    animateColor: widget.animationColor,
                     onTap: (value) {
                       widget.useNumber(_value);
                     },
@@ -205,6 +209,7 @@ class DialButton extends StatefulWidget {
   final Color iconColor;
   final ValueSetter<String> onTap;
   final bool shouldAnimate;
+  final Color animateColor;
 
   DialButton(
       {this.key,
@@ -215,6 +220,7 @@ class DialButton extends StatefulWidget {
       this.icon,
       this.iconColor,
       this.shouldAnimate,
+      this.animateColor,
       this.onTap});
 
   @override
@@ -233,7 +239,7 @@ class _DialButtonState extends State<DialButton>
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _colorTween = ColorTween(
             begin: widget.color != null ? widget.color : Colors.white24,
-            end: Colors.white)
+            end: widget.animateColor != null ? widget.animateColor : Colors.white)
         .animate(_animationController);
 
     super.initState();
