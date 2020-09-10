@@ -239,7 +239,9 @@ class _DialButtonState extends State<DialButton>
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _colorTween = ColorTween(
             begin: widget.color != null ? widget.color : Colors.white24,
-            end: widget.animateColor != null ? widget.animateColor : Colors.white)
+            end: widget.animateColor != null
+                ? widget.animateColor
+                : Colors.white)
         .animate(_animationController);
 
     super.initState();
@@ -248,7 +250,22 @@ class _DialButtonState extends State<DialButton>
   @override
   void dispose() {
     super.dispose();
-    if (widget.shouldAnimate == null || widget.shouldAnimate) _timer.cancel();
+    // if (widget.shouldAnimate == null || widget.shouldAnimate) _timer.cancel();
+  }
+
+  void animationRunner() {
+    if (widget.shouldAnimate == null || widget.shouldAnimate) {
+      if (_animationController.status == AnimationStatus.completed) {
+        _animationController.reverse();
+      } else {
+        _animationController.forward();
+        _timer = Timer(const Duration(milliseconds: 200), () {
+          setState(() {
+            _animationController.reverse();
+          });
+        });
+      }
+    }
   }
 
   @override
@@ -257,25 +274,17 @@ class _DialButtonState extends State<DialButton>
     var sizeFactor = screenSize.height * 0.09852217;
 
     return GestureDetector(
-//      onLongPress: () {
-//        print('Long Pressed');
-//        if (this.widget.onTap != null) this.widget.onTap("+");
-//      },
-      onTap: () {
-        if (this.widget.onTap != null) this.widget.onTap(widget.title);
+      onLongPress: () {
+        print('Long Pressed');
 
-        if (widget.shouldAnimate == null || widget.shouldAnimate) {
-          if (_animationController.status == AnimationStatus.completed) {
-            _animationController.reverse();
-          } else {
-            _animationController.forward();
-            _timer = Timer(const Duration(milliseconds: 200), () {
-              setState(() {
-                _animationController.reverse();
-              });
-            });
-          }
+        if (widget.title == '0') {
+          this.widget.onTap("+");
+          animationRunner();
         }
+      },
+      onTap: () {
+        this.widget.onTap(widget.title);
+        animationRunner();
       },
       child: ClipOval(
           child: AnimatedBuilder(
